@@ -40,7 +40,7 @@ impl Point {
         Point { x, y }
     }
 }
-
+#[derive(Debug)]
 pub struct Matrix {
     rows: usize,
     cols: usize,
@@ -114,13 +114,9 @@ pub fn create_map() -> (Vec<Region>, f64) {
                     f64::from(i) + centroid_jitter.sample(),
                     f64::from(j) + centroid_jitter.sample(),
                 ),
-                if cluster_indices.contains(&vec![i, j]) {
-                    true
-                } else {
-                    false
-                },
+                cluster_indices.contains(&vec![i, j]),
             ));
-            k = k + 1;
+            k += 1;
         }
     }
 
@@ -131,7 +127,7 @@ pub fn create_dist_matrix(map: &[Region]) -> Matrix {
     let l = map.len();
     let mut m = Matrix::new(l, l);
     for i in 0..l {
-        for j in 0..l {
+        for j in i..l {
             m.set(i, j, map[i].dist(&map[j]));
         }
     }
