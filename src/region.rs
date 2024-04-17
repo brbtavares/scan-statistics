@@ -1,3 +1,4 @@
+#[derive(Clone)]
 pub struct Region {
     pub(crate) idx: usize,
     pub(crate) expectation: f64,
