@@ -1,11 +1,12 @@
-use compute::distributions::*;
+use crate::region::Region;
+use compute::distributions::{Distribution, Poisson, Uniform};
 
-pub fn create_map() -> (Vec<crate::region::Region>, f64) {
+pub fn create_map() -> (Vec<Region>, f64) {
     let centroid_jitter = Uniform::new(-0.5, 0.5);
     let expectation_gen = Uniform::new(0., 10.);
     let mut expectation_gen_sample: f64;
     let mut expectation_total: f64 = 0.;
-    let mut v: Vec<crate::region::Region> = Vec::new();
+    let mut v: Vec<Region> = Vec::new();
     let mut k: usize = 0;
     let cluster_indices: Vec<Vec<i32>> = vec![
         vec![5, 7],
@@ -32,7 +33,7 @@ pub fn create_map() -> (Vec<crate::region::Region>, f64) {
         for j in 1..14 {
             expectation_gen_sample = expectation_gen.sample();
             expectation_total += expectation_gen_sample;
-            v.push(crate::region::Region::new(
+            v.push(Region::new(
                 k,
                 expectation_gen_sample,
                 Poisson::new(expectation_gen_sample).sample(),
@@ -47,4 +48,10 @@ pub fn create_map() -> (Vec<crate::region::Region>, f64) {
     }
 
     (v, expectation_total * 0.15)
+}
+
+pub fn create_cluster_candidates(m: &[Region], thres: f64) -> Vec<Vec<Region>> {
+    let dist_vec = crate::distance::create_dist_vec(m);
+    let mut temp_vec: Vec<Vec<Region>> = Vec::new();
+    temp_vec
 }
